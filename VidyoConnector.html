@@ -277,7 +277,7 @@ to hook up all of the events to elements. -->
 		<p>
 			<!-- The portal of our backend service. -->
 			<label>Portal</label>
-			<input type="text" id="portal" class="portal" value="vidyocloud.com">
+			<input type="text" id="portal" class="portal" value="collab-ucc.nuviacloud.com">
 		</p>
 		<p>
 			<!-- This is the display name that other users will see.
@@ -337,6 +337,7 @@ to hook up all of the events to elements. -->
 			<!-- All Vidyo-related messages will be inserted into these spans. -->
 			<span id="error"></span>
 			<span id="message"></span>
+			<p id="chatmessage"></p>
 		</div>
 	</div>
 	<!-- This is the div into which the Vidyo component will be inserted. -->
@@ -358,6 +359,9 @@ to hook up all of the events to elements. -->
 
 		<!-- This button mutes and unmutes the users' microphone. -->
 		<button id="microphoneButton" title="Microphone Privacy" class="toolbarButton microphoneOn"></button>
+		
+		<!-- This button starts speech to text feature. -->
+		<button id="startS2T" title="Speech To Text" class="toolbarButton s2t"></button>
 	</div>
 	<div id="helper">
 		<table>

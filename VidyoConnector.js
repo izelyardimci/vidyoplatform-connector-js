@@ -21,6 +21,22 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
         vidyoConnector.Destruct();
     }
 
+    $("#startS2T").on("click", function () {
+        var recognition = new webkitSpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = "tr-TR";
+        recognition.onresult = function (event) {
+            for (var i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    var final_transcript = event.results[i][0].transcript;
+                    vidyoConnector.SendChatMessage(final_transcript);
+                }
+            }
+        };
+        recognition.start();
+    });
+
     VC.CreateVidyoConnector({
         viewId: "renderer",                            // Div ID where the composited video will be rendered, see VidyoConnector.html
         viewStyle: "VIDYO_CONNECTORVIEWSTYLE_Default", // Visual style of the composited renderer
@@ -32,9 +48,18 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
         vidyoConnector = vc;
         ShowRenderer(vidyoConnector);
         registerDeviceListeners(vidyoConnector, cameras, microphones, speakers);
+        
         handleDeviceChange(vidyoConnector, cameras, microphones, speakers);
         handleParticipantChange(vidyoConnector);
         handleSharing(vidyoConnector, useTranscodingWebRTC, performMonitorShare, webrtcExtensionPath);
+        
+        vidyoConnector.RegisterMessageEventListener({
+          onChatMessageReceived: function (participant, chatMessage) {
+            $("#chatmessage").html(
+              "<strong>" + participant.name + "</strong> - " + chatMessage.body
+            );
+          },
+        });
 
         // Populate the connectionStatus with the client version
         vidyoConnector.GetVersion().then(function(version) {
