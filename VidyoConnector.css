@@ -100,7 +100,7 @@ html, body {
 }
 
 #toolbarLeft {
-	background-color:    rgb(243, 21, 213);
+	background-color:    rgb(2, 221, 250);
 	text-align:       left;
 }
 #toolbarCenter {
@@ -180,7 +180,7 @@ html, body {
 	background-size:     32px auto;
 	background-repeat:   no-repeat;
 	background-position: center;
-	background-color:    rgb(243, 21, 213);
+	background-color:    rgb(2, 221, 250);
 	border:              0;
 }
 
