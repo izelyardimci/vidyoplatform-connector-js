@@ -27,13 +27,12 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
         recognition.interimResults = true;
         recognition.lang = "tr-TR";
         recognition.onresult = function (event) {
-            var interim_transcript = '';
             for (var i = event.resultIndex; i < event.results.length; ++i) {
                 if (event.results[i].isFinal) {
-                    final_transcript += event.results[i][0].transcript;
+                    var final_transcript = event.results[i][0].transcript;
                     vidyoConnector.SendChatMessage(final_transcript);
                 } else {
-                    interim_transcript += event.results[i][0].transcript;
+                    var interim_transcript = event.results[i][0].transcript;
                     vidyoConnector.SendChatMessage(interim_transcript);
                 }
             }
