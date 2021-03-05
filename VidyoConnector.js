@@ -31,6 +31,9 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
                 if (event.results[i].isFinal) {
                     var final_transcript = event.results[i][0].transcript;
                     vidyoConnector.SendChatMessage(final_transcript);
+                } else {
+                    var interim_transcript = event.results[i][0].transcript;
+                    vidyoConnector.SendChatMessage(interim_transcript);
                 }
             }
         };
