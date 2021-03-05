@@ -25,14 +25,15 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
         var recognition = new webkitSpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = true;
-        recognition.lang = "en-US";
+        recognition.lang = "tr-TR";
         recognition.onresult = function (event) {
+            var interim_transcript = '';
             for (var i = event.resultIndex; i < event.results.length; ++i) {
                 if (event.results[i].isFinal) {
-                    var final_transcript = event.results[i][0].transcript;
+                    final_transcript += event.results[i][0].transcript;
                     vidyoConnector.SendChatMessage(final_transcript);
                 } else {
-                    var interim_transcript = event.results[i][0].transcript;
+                    interim_transcript += event.results[i][0].transcript;
                     vidyoConnector.SendChatMessage(interim_transcript);
                 }
             }
