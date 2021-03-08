@@ -114,9 +114,11 @@ html, body {
 }
 .rendererFullScreen {
 	left: 0px;
+	top:20px;
 }
 .rendererFullScreenPermanent {
 	left: 0px;
+	top:20px;
 }
 .hidden {
 	display: none;
