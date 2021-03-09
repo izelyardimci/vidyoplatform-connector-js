@@ -1,6 +1,7 @@
 * {
 	margin:       0;
 	padding:      0;
+	bottom:		  50px;
 }
 html, body {
 	width:        100%;
