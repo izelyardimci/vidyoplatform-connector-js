@@ -22,21 +22,50 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
     }
 
     $("#startS2T").on("click", function () {
-        var recognition = new webkitSpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = "tr-TR"
-        recognition.onresult = function (event) {
-            for (var i = event.resultIndex; i < event.results.length; ++i) {
-                if (event.results[i].isFinal) {
-                    var final_transcript = event.results[i][0].transcript;
-                    vidyoConnector.SendChatMessage(final_transcript);
-                } else {
-                    var interim_transcript = event.results[i][0].transcript;
-                    vidyoConnector.SendChatMessage(interim_transcript);
+
+        try {
+            var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            var recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = "tr-TR"
+            recognition.onresult = function (event) {
+                for (var i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        var final_transcript = event.results[i][0].transcript;
+                        vidyoConnector.SendChatMessage(final_transcript);
+                    } else {
+                        var interim_transcript = event.results[i][0].transcript;
+                        vidyoConnector.SendChatMessage(interim_transcript);
+                    }
                 }
-            }
-        };
+            };
+            
+        }
+        catch(e) {
+            console.error(e);
+            $('.no-browser-support').show();
+            $('.app').hide();
+        }
+        recognition.onstart = function() { 
+            instructions.text('Voice recognition activated. Try speaking into the microphone.');
+        }
+          
+        recognition.onspeechend = function() {
+            instructions.text('You were quiet for a while so voice recognition turned itself off.');
+        }
+          
+        recognition.onerror = function(event) {
+            if(event.error == 'no-speech') {
+        ,      instructions.text('No speech was detected. Try again.');  
+            };
+        }
+        var mobileRepeatBug = (current == 1 && transcript == event.results[0][0].transcript);
+
+        if(!mobileRepeatBug) {
+            noteContent += transcript;
+            noteTextarea.val(noteContent);
+        }
         recognition.start();
     });
 
