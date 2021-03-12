@@ -30,12 +30,19 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
             for (var i = event.resultIndex; i < event.results.length; ++i) {
                 if (event.results[i].isFinal) {
                     var final_transcript = event.results[i][0].transcript;
+                    $("#chatmessage").html(
+                        "<strong>" + $("#displayName").val() + "</strong> - " + final_transcript
+                      );
                     vidyoConnector.SendChatMessage(final_transcript);
                 } else {
                     var interim_transcript = event.results[i][0].transcript;
+                    $("#chatmessage").html(
+                        "<strong>" + $("#displayName").val() + "</strong> - " + interim_transcript
+                      );
                     vidyoConnector.SendChatMessage(interim_transcript);
                 }
             }
+            
         };
         recognition.start();
     });
