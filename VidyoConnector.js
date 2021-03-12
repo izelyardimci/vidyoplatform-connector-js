@@ -21,6 +21,7 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
         vidyoConnector.Destruct();
     }
     
+    var recognition = new webkitSpeechRecognition();
     recognition.onstart = function() {
         console.log('Speech recognition service has started');
     };
@@ -30,7 +31,6 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
     };
 
     $("#startS2T").on("click", function () {
-        var recognition = new webkitSpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = true;
         recognition.lang = "tr-TR"
@@ -53,6 +53,10 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
             
         };
         recognition.start();
+        
+        recognition.onend = function(event) {
+            recognition.start();
+         }
     });
 
     VC.CreateVidyoConnector({
