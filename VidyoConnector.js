@@ -20,6 +20,14 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
     window.onbeforeunload = function() {
         vidyoConnector.Destruct();
     }
+    
+    recognition.onstart = function() {
+        console.log('Speech recognition service has started');
+    };
+    
+    recognition.onend = function() {
+        console.log('Speech recognition service disconnected');
+    };
 
     $("#startS2T").on("click", function () {
         var recognition = new webkitSpeechRecognition();
