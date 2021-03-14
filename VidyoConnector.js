@@ -31,54 +31,6 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
         console.log('Speech recognition service disconnected');
     };
 
-    // Handle speech to text initial state
-    if (configParams.startstops2t === "1") {
-        $("#startS2T").click();
-    }
-
-    $("#startS2T").on("click", function () {
-        // Speech to text button clicked
-        startstops2t = !startstops2t;
-        vidyoConnector.SetStartStopS2T({
-            privacy: startstops2t
-        }).then(function() {
-            if (startstops2t) {
-                $("#startS2T").addClass("stops2t").removeClass("s2t");
-            } else {
-                $("#startS2T").addClass("s2t").removeClass("stops2t");
-            }
-            console.log("SetStartStopS2T Success");
-        }).catch(function() {
-            console.error("SetStartStopS2T Failed");
-        });
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = "tr-TR"
-        recognition.onresult = function (event) {
-            for (var i = event.resultIndex; i < event.results.length; ++i) {
-                if (event.results[i].isFinal) {
-                    var final_transcript = event.results[i][0].transcript;
-                    $("#chatmessage").html(
-                        "<strong>" + $("#displayName").val() + "</strong> - " + final_transcript
-                      );
-                    vidyoConnector.SendChatMessage(final_transcript);
-                } else {
-                    var interim_transcript = event.results[i][0].transcript;
-                    $("#chatmessage").html(
-                        "<strong>" + $("#displayName").val() + "</strong> - " + interim_transcript
-                      );
-                    vidyoConnector.SendChatMessage(interim_transcript);
-                }
-            }
-            
-        };
-        recognition.start();
-        
-        recognition.onend = function(event) {
-            recognition.start();
-        }
-    });
-
     VC.CreateVidyoConnector({
         viewId: "renderer",                            // Div ID where the composited video will be rendered, see VidyoConnector.html
         viewStyle: "VIDYO_CONNECTORVIEWSTYLE_Default", // Visual style of the composited renderer
@@ -169,6 +121,10 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
         if (configParams.microphonePrivacy === "1") {
             $("#microphoneButton").click();
         }
+        // Handle speech to text initial state
+        if (configParams.startstops2t === "1") {
+            $("#startS2T").click();
+        }
 
         // Join the conference if the autoJoin URL parameter was enabled
         if (configParams.autoJoin === "1") {
@@ -178,7 +134,48 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
           $("#joinLeaveButton").one("click", joinLeave);
         }
 
-        
+        $("#startS2T").on("click", function () {
+            // Speech to text button clicked
+            startstops2t = !startstops2t;
+            vidyoConnector.SetStartStopS2T({
+                privacy: startstops2t
+            }).then(function() {
+                if (startstops2t) {
+                    $("#startS2T").addClass("stops2t").removeClass("s2t");
+                } else {
+                    $("#startS2T").addClass("s2t").removeClass("stops2t");
+                }
+                console.log("SetStartStopS2T Success");
+            }).catch(function() {
+                console.error("SetStartStopS2T Failed");
+            });
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = "tr-TR"
+            recognition.onresult = function (event) {
+                for (var i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        var final_transcript = event.results[i][0].transcript;
+                        $("#chatmessage").html(
+                            "<strong>" + $("#displayName").val() + "</strong> - " + final_transcript
+                          );
+                        vidyoConnector.SendChatMessage(final_transcript);
+                    } else {
+                        var interim_transcript = event.results[i][0].transcript;
+                        $("#chatmessage").html(
+                            "<strong>" + $("#displayName").val() + "</strong> - " + interim_transcript
+                          );
+                        vidyoConnector.SendChatMessage(interim_transcript);
+                    }
+                }
+                
+            };
+            recognition.start();
+            
+            recognition.onend = function(event) {
+                recognition.start();
+            }
+        });
 
         // Handle the camera privacy button, toggle between show and hide.
         $("#cameraButton").click(function() {
