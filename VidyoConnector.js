@@ -134,12 +134,8 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
         }
 
         $("#startS2T").on("click", function () {
-            recognition.continuous = true;
-            recognition.interimResults = true;
-            recognition.lang = "tr-TR"
             // Speech to text button clicked
             startstops2t = !startstops2t;
-
             vidyoConnector.SetStartStopS2T({
                 privacy: startstops2t
             }).then(function() {
@@ -152,7 +148,9 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
             }).catch(function() {
                 console.error("SetStartStopS2T Failed");
             });
-
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = "tr-TR"
             recognition.onresult = function (event) {
                 for (var i = event.resultIndex; i < event.results.length; ++i) {
                     if (event.results[i].isFinal) {
