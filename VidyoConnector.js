@@ -11,6 +11,7 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
     var speakers = {};
     var cameraPrivacy = false;
     var microphonePrivacy = false;
+    var startstops2t = false;
 
     window.onresize = function()
     {
@@ -29,35 +30,6 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
     recognition.onend = function() {
         console.log('Speech recognition service disconnected');
     };
-
-    $("#startS2T").on("click", function () {
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = "tr-TR"
-        recognition.onresult = function (event) {
-            for (var i = event.resultIndex; i < event.results.length; ++i) {
-                if (event.results[i].isFinal) {
-                    var final_transcript = event.results[i][0].transcript;
-                    $("#chatmessage").html(
-                        "<strong>" + $("#displayName").val() + "</strong> - " + final_transcript
-                      );
-                    vidyoConnector.SendChatMessage(final_transcript);
-                } else {
-                    var interim_transcript = event.results[i][0].transcript;
-                    $("#chatmessage").html(
-                        "<strong>" + $("#displayName").val() + "</strong> - " + interim_transcript
-                      );
-                    vidyoConnector.SendChatMessage(interim_transcript);
-                }
-            }
-            
-        };
-        recognition.start();
-        
-        recognition.onend = function(event) {
-            recognition.start();
-         }
-    });
 
     VC.CreateVidyoConnector({
         viewId: "renderer",                            // Div ID where the composited video will be rendered, see VidyoConnector.html
@@ -142,12 +114,15 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
             });
         }
 
-        // Handle camera privacy and microphone privacy initial state
+        // Handle camera privacy, microphone privacy and start/stop speech to text initial state
         if (configParams.cameraPrivacy === "1") {
-           $("#cameraButton").click();
+            $("#cameraButton").click();
         }
         if (configParams.microphonePrivacy === "1") {
-           $("#microphoneButton").click();
+            $("#microphoneButton").click();
+        }
+        if (configParams.startstops2t === "1") {
+            $("#startS2T").click();
         }
 
         // Join the conference if the autoJoin URL parameter was enabled
@@ -157,6 +132,51 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
           // Handle the join in the toolbar button being clicked by the end user.
           $("#joinLeaveButton").one("click", joinLeave);
         }
+
+        $("#startS2T").on("click", function () {
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = "tr-TR"
+            // Speech to text button clicked
+            startstops2t = !startstops2t;
+
+            vidyoConnector.SetStartStopS2T({
+                privacy: startstops2t
+            }).then(function() {
+                if (startstops2t) {
+                    $("#startS2T").addClass("stops2t").removeClass("s2t");
+                } else {
+                    $("#cameraButton").addClass("s2t").removeClass("stops2t");
+                }
+                console.log("SetStartStopS2T Success");
+            }).catch(function() {
+                console.error("SetStartStopS2T Failed");
+            });
+
+            recognition.onresult = function (event) {
+                for (var i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        var final_transcript = event.results[i][0].transcript;
+                        $("#chatmessage").html(
+                            "<strong>" + $("#displayName").val() + "</strong> - " + final_transcript
+                          );
+                        vidyoConnector.SendChatMessage(final_transcript);
+                    } else {
+                        var interim_transcript = event.results[i][0].transcript;
+                        $("#chatmessage").html(
+                            "<strong>" + $("#displayName").val() + "</strong> - " + interim_transcript
+                          );
+                        vidyoConnector.SendChatMessage(interim_transcript);
+                    }
+                }
+                
+            };
+            recognition.start();
+            
+            recognition.onend = function(event) {
+                recognition.start();
+            }
+        });
 
         // Handle the camera privacy button, toggle between show and hide.
         $("#cameraButton").click(function() {

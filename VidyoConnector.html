@@ -236,6 +236,7 @@
 		configParams.enableDebug = getUrlParameterByName("enableDebug");
 		configParams.microphonePrivacy = getUrlParameterByName("microphonePrivacy");
 		configParams.cameraPrivacy = getUrlParameterByName("cameraPrivacy");
+		configParams.startstops2t = getUrlParameterByName("startstops2t");
 		configParams.webrtcLogLevel = getUrlParameterByName("webrtcLogLevel");
 		configParams.returnURL = getUrlParameterByName("returnURL");
 		configParams.isIE = platformInfo.isIE;
@@ -366,7 +367,7 @@ to hook up all of the events to elements. -->
 		<!-- This button mutes and unmutes the users' microphone. -->
 		<button id="microphoneButton" title="Microphone Privacy" class="toolbarButton microphoneOn"></button>
 		
-		<!-- This button starts speech to text feature. -->
+		<!-- This button starts and stops speech to text feature. -->
 		<button id="startS2T" title="Speech To Text" class="toolbarButton s2t"></button>
 	</div>
 	<div id="helper">
