@@ -146,7 +146,7 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
                 if (startstops2t) {
                     $("#startS2T").addClass("stops2t").removeClass("s2t");
                 } else {
-                    $("#cameraButton").addClass("s2t").removeClass("stops2t");
+                    $("#startS2T").addClass("s2t").removeClass("stops2t");
                 }
                 console.log("SetStartStopS2T Success");
             }).catch(function() {
