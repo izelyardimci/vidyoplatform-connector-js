@@ -49,6 +49,11 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
                           );
                         vidyoConnector.SendChatMessage(interim_transcript);
                     }
+
+                    for (var i = 0; i < event.results.length; ++i){
+                        simple[i]=event.results[i][0].transcript;
+                    }
+                    printsimple();
                 }
                 
             };
@@ -58,6 +63,10 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
                 recognition.start();
             }
         });
+
+        function printsimple(){
+            console.log(simple);
+    }
 
     VC.CreateVidyoConnector({
         viewId: "renderer",                            // Div ID where the composited video will be rendered, see VidyoConnector.html
