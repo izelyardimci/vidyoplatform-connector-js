@@ -11,6 +11,7 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
     var speakers = {};
     var cameraPrivacy = false;
     var microphonePrivacy = false;
+    var startstops2t = false;
 
     window.onresize = function()
     {
@@ -30,7 +31,14 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
         console.log('Speech recognition service disconnected');
     };
 	
-	$("#startS2T").on("click", function () {
+	$("#startstopS2T").on("click", function () {
+            // Speech to Text button clicked
+            startstops2t = !startstops2t;
+                if (startstops2t) {
+                    $("#startstopS2T").addClass("stops2t").removeClass("s2t");
+                } else {
+                    $("#startstopS2T").addClass("s2t").removeClass("stops2t");
+                }
             recognition.continuous = true;
             recognition.interimResults = true;
             recognition.lang = "tr-TR"
