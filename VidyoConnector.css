@@ -194,6 +194,7 @@ html, body {
 .callEnd       { background-image: url(Images/callEnd.png); }
 .s2t       { background-image: url(Images/s2t.png); }
 .stops2t       { background-image: url(Images/stops2t.png); }
+.save       { background-image: url(Images/save.png); }
 .showOptions   {
 	background-image: url(Images/showOptions.png);
 	background-size:  30px auto;
