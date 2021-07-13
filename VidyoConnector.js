@@ -41,7 +41,7 @@ function StartVidyoConnector(VC, useTranscodingWebRTC, performMonitorShare, webr
                 }
             recognition.continuous = true;
             recognition.interimResults = true;
-            recognition.lang = "en-US"
+            recognition.lang = "tr-TR"
             recognition.onresult = function (event) {
                 for (var i = event.resultIndex; i < event.results.length; ++i) {
                     if (event.results[i].isFinal) {
